@@ -1,0 +1,38 @@
+
+from collections import deque
+
+def solution(A):
+    N = len(A)
+    fibonacci = generate_fibonacci(N + 1)
+    min_jumps = [-1] * (N + 2)
+
+    queue = deque([(0, 0)])
+    min_jumps[0] = 0
+
+    while queue:
+        position, jumps = queue.popleft()
+
+        for jump in fibonacci:
+            next_position = position + jump
+
+            if next_position == N + 1:
+                return jumps + 1
+
+            if 0 < next_position <= N and A[next_position - 1] == 1 and min_jumps[next_position] == -1:
+                queue.append((next_position, jumps + 1))
+                min_jumps[next_position] = jumps + 1
+
+    return -1
+
+
+def generate_fibonacci(N):
+    fibonacci = [0] * (N + 2)
+    fibonacci[1] = 1
+
+    for i in range(2, N + 2):
+        fibonacci[i] = fibonacci[i - 1] + fibonacci[i - 2]
+
+        if fibonacci[i] > N + 1:
+            break
+
+    return fibonacci[2:]
